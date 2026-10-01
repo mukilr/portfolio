@@ -187,13 +187,12 @@ a { color: inherit; }
 .dialog-kicker { margin: 0 0 .7rem; color: var(--green); font-size: .72rem; letter-spacing: .16em; }
 .robot-form h2, .email-reveal h2 { margin: 0; color: var(--green); font-size: 1.25rem; }
 .robot-form > p:not(.dialog-kicker, .robot-message), .email-reveal > p:not(.dialog-kicker, .copy-status) { color: var(--green-muted); font-size: .85rem; }
-.robot-form label { display: block; margin: 1.5rem 0 .5rem; color: var(--green); }
-.robot-form input { width: 100%; padding: .7rem .8rem; border: 1px solid var(--green-muted); border-radius: 0; outline: 0; color: var(--green); background: var(--black); caret-color: var(--green); font: inherit; }
-.robot-form input:focus { border-color: var(--green); }
+.recaptcha-widget { min-height: 78px; margin: 1.5rem 0 .5rem; overflow: hidden; }
 .robot-message { min-height: 1.5em; margin: .45rem 0; color: #ff9b9b; font-size: .78rem; }
 .dialog-actions { display: flex; justify-content: flex-end; gap: .7rem; margin-top: 1rem; }
 .dialog-actions button { padding: .55rem .75rem; border: 1px solid var(--green-muted); color: var(--green-soft); background: transparent; font: inherit; cursor: pointer; }
 .dialog-actions button[type="submit"] { color: var(--black); border-color: var(--green); background: var(--green); }
+.dialog-actions button:disabled { cursor: not-allowed; opacity: .4; }
 .dialog-actions button:hover, .dialog-actions button:focus-visible { outline: 1px solid var(--green); outline-offset: 2px; }
 
 .email-result { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: .55rem; margin-top: 1.5rem; }

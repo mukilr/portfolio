@@ -1,7 +1,9 @@
 {
   "name": "mukil-rajeev-portfolio",
   "private": true,
+  "type": "module",
   "scripts": {
-    "build": "node build.mjs"
+    "build": "node build.mjs",
+    "dev": "node dev-server.mjs"
   }
 }

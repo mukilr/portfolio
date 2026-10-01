@@ -8,8 +8,8 @@
   <script>document.documentElement.classList.add('js')</script>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23020604'/%3E%3Cpath d='M14 18h36v28H14z' fill='none' stroke='%2348ff8b' stroke-width='3'/%3E%3Cpath d='m21 27 7 5-7 5M32 38h11' fill='none' stroke='%2348ff8b' stroke-width='3'/%3E%3C/svg%3E">
   <title>Mukil Rajeev | Terminal Portfolio</title>
-  <link rel="stylesheet" href="./styles.css?v=terminal-4">
-  <script src="./script.js?v=terminal-4" defer></script>
+  <link rel="stylesheet" href="./styles.css?v=terminal-5">
+  <script src="./script.js?v=terminal-5" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#content">Skip to content</a>
@@ -127,13 +127,12 @@
     <form class="robot-form" id="robot-form" method="dialog">
       <p class="dialog-kicker">SECURITY CHECK</p>
       <h2 id="robot-title">Confirm you are human</h2>
-      <p>Solve this quick terminal challenge to reveal the protected email address.</p>
-      <label for="robot-answer"><output id="robot-question"></output></label>
-      <input id="robot-answer" name="robot-answer" type="text" inputmode="numeric" autocomplete="off" required>
+      <p>Complete Google’s verification to reveal the protected email address.</p>
+      <div class="recaptcha-widget" id="recaptcha-widget"></div>
       <p class="robot-message" id="robot-message" aria-live="polite"></p>
       <div class="dialog-actions">
         <button type="button" data-close-dialog>cancel</button>
-        <button type="submit">verify &amp; reveal</button>
+        <button id="verify-human" type="submit" disabled>verify &amp; reveal</button>
       </div>
     </form>
     <section class="email-reveal" id="email-reveal" hidden aria-labelledby="email-reveal-title">
