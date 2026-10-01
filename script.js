@@ -84,8 +84,16 @@ const robotForm = document.querySelector('#robot-form');
 const robotQuestion = document.querySelector('#robot-question');
 const robotAnswer = document.querySelector('#robot-answer');
 const robotMessage = document.querySelector('#robot-message');
+const emailReveal = document.querySelector('#email-reveal');
+const protectedEmail = document.querySelector('#protected-email');
+const copyEmailButton = document.querySelector('#copy-email');
+const openEmailLink = document.querySelector('#open-email');
+const copyStatus = document.querySelector('#copy-status');
+const emailCipher = [55, 47, 49, 51, 54, 40, 26, 61, 55, 59, 51, 54, 116, 57, 53, 55];
 let expectedRobotAnswer = 0;
 let activeOption = 0;
+
+const unlockEmail = () => String.fromCharCode(...emailCipher.map((value) => value ^ 90));
 
 optionButtons.forEach((button, index) => {
   button.id = `quick-option-${index}`;
@@ -128,6 +136,11 @@ const openRobotCheck = () => {
   robotQuestion.textContent = `$ verify-human --answer "${first} + ${second} = ?"`;
   robotAnswer.value = '';
   robotMessage.textContent = '';
+  robotForm.hidden = false;
+  emailReveal.hidden = true;
+  protectedEmail.textContent = '';
+  openEmailLink.setAttribute('href', '#');
+  copyStatus.textContent = '';
   robotDialog.showModal();
   window.setTimeout(() => robotAnswer.focus(), 0);
 };
@@ -179,10 +192,34 @@ robotForm.addEventListener('submit', (event) => {
     robotAnswer.select();
     return;
   }
-  robotMessage.textContent = 'Human verified. Opening your email app...';
-  robotDialog.close();
-  window.location.href = 'mailto:mukilr@gmail.com?subject=Portfolio%20inquiry';
+  const email = unlockEmail();
+  robotForm.hidden = true;
+  emailReveal.hidden = false;
+  protectedEmail.textContent = email;
+  openEmailLink.setAttribute('href', `mailto:${email}?subject=Portfolio%20inquiry`);
+  window.setTimeout(() => copyEmailButton.focus(), 0);
 });
 
-document.querySelector('[data-close-dialog]').addEventListener('click', () => robotDialog.close());
+const copyUnlockedEmail = async () => {
+  const email = unlockEmail();
+  try {
+    await navigator.clipboard.writeText(email);
+  } catch {
+    const fallback = document.createElement('textarea');
+    fallback.value = email;
+    fallback.setAttribute('readonly', '');
+    fallback.style.position = 'fixed';
+    fallback.style.opacity = '0';
+    document.body.append(fallback);
+    fallback.select();
+    document.execCommand('copy');
+    fallback.remove();
+  }
+  copyStatus.textContent = 'Email address copied.';
+};
+
+copyEmailButton.addEventListener('click', copyUnlockedEmail);
+document.querySelectorAll('[data-close-dialog]').forEach((button) => {
+  button.addEventListener('click', () => robotDialog.close());
+});
 setActiveOption(0);

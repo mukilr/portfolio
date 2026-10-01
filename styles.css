@@ -182,10 +182,11 @@ a { color: inherit; }
 
 .robot-dialog { width: min(520px, calc(100% - 2rem)); padding: 0; border: 1px solid var(--green); color: var(--green-soft); background: var(--panel); box-shadow: 0 0 5rem rgba(72,255,139,.14); }
 .robot-dialog::backdrop { background: rgba(0,5,2,.82); backdrop-filter: blur(3px); }
-.robot-form { padding: clamp(1.25rem, 5vw, 2.25rem); }
+.robot-form, .email-reveal { padding: clamp(1.25rem, 5vw, 2.25rem); }
+.robot-form[hidden], .email-reveal[hidden] { display: none; }
 .dialog-kicker { margin: 0 0 .7rem; color: var(--green); font-size: .72rem; letter-spacing: .16em; }
-.robot-form h2 { margin: 0; color: var(--green); font-size: 1.25rem; }
-.robot-form > p:not(.dialog-kicker, .robot-message) { color: var(--green-muted); font-size: .85rem; }
+.robot-form h2, .email-reveal h2 { margin: 0; color: var(--green); font-size: 1.25rem; }
+.robot-form > p:not(.dialog-kicker, .robot-message), .email-reveal > p:not(.dialog-kicker, .copy-status) { color: var(--green-muted); font-size: .85rem; }
 .robot-form label { display: block; margin: 1.5rem 0 .5rem; color: var(--green); }
 .robot-form input { width: 100%; padding: .7rem .8rem; border: 1px solid var(--green-muted); border-radius: 0; outline: 0; color: var(--green); background: var(--black); caret-color: var(--green); font: inherit; }
 .robot-form input:focus { border-color: var(--green); }
@@ -194,6 +195,13 @@ a { color: inherit; }
 .dialog-actions button { padding: .55rem .75rem; border: 1px solid var(--green-muted); color: var(--green-soft); background: transparent; font: inherit; cursor: pointer; }
 .dialog-actions button[type="submit"] { color: var(--black); border-color: var(--green); background: var(--green); }
 .dialog-actions button:hover, .dialog-actions button:focus-visible { outline: 1px solid var(--green); outline-offset: 2px; }
+
+.email-result { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: .55rem; margin-top: 1.5rem; }
+.email-result code { min-width: 0; overflow: hidden; padding: .75rem .8rem; border: 1px solid var(--green-muted); color: var(--green); background: var(--black); font: inherit; text-overflow: ellipsis; white-space: nowrap; user-select: all; }
+.icon-action { display: grid; place-items: center; width: 2.85rem; height: 2.85rem; padding: .65rem; border: 1px solid var(--green-muted); color: var(--green); background: transparent; cursor: pointer; }
+.icon-action:hover, .icon-action:focus-visible { outline: 1px solid var(--green); outline-offset: 2px; background: rgba(72,255,139,.07); }
+.icon-action svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.copy-status { min-height: 1.4em; margin: .55rem 0 0; color: var(--green); font-size: .78rem; }
 
 @keyframes blink { 50% { opacity: 0; } }
 
@@ -210,6 +218,7 @@ a { color: inherit; }
   .career-list article, .education-list article { grid-template-columns: 1fr; gap: .3rem; }
   .contact-links a, .contact-links button { grid-template-columns: 1fr; }
   .quick-options button { grid-template-columns: 6rem 1fr; }
+  .email-result { grid-template-columns: 1fr auto auto; }
 }
 
 @media (prefers-reduced-motion: reduce) {

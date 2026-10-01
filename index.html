@@ -8,8 +8,8 @@
   <script>document.documentElement.classList.add('js')</script>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23020604'/%3E%3Cpath d='M14 18h36v28H14z' fill='none' stroke='%2348ff8b' stroke-width='3'/%3E%3Cpath d='m21 27 7 5-7 5M32 38h11' fill='none' stroke='%2348ff8b' stroke-width='3'/%3E%3C/svg%3E">
   <title>Mukil Rajeev | Terminal Portfolio</title>
-  <link rel="stylesheet" href="./styles.css?v=terminal-3">
-  <script src="./script.js?v=terminal-3" defer></script>
+  <link rel="stylesheet" href="./styles.css?v=terminal-4">
+  <script src="./script.js?v=terminal-4" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#content">Skip to content</a>
@@ -101,7 +101,7 @@
       <section class="terminal-section contact terminal-sequence" id="contact">
         <p class="command" data-stream>mukil@portfolio:~$ contact --list</p>
         <div class="terminal-output contact-links">
-          <button type="button" data-stream data-delay="120" data-command="email"><span>email</span>verify to compose</button>
+          <button type="button" data-stream data-delay="120" data-command="email"><span>email</span>verify to reveal</button>
           <a data-stream data-delay="200" href="https://www.linkedin.com/in/mukil-rajeev/" target="_blank" rel="noreferrer"><span>linkedin</span>/in/mukil-rajeev</a>
           <a data-stream data-delay="280" href="resume.html"><span>resume</span>open HTML resume</a>
         </div>
@@ -115,7 +115,7 @@
           <div class="quick-options" id="quick-options" role="listbox" aria-label="Quick commands">
             <button type="button" role="option" data-command="resume"><kbd>resume</kbd><span>open full resume</span></button>
             <button type="button" role="option" data-command="replay"><kbd>replay</kbd><span>refresh animations</span></button>
-            <button type="button" role="option" data-command="email"><kbd>email</kbd><span>verify and compose</span></button>
+            <button type="button" role="option" data-command="email"><kbd>email</kbd><span>verify and reveal</span></button>
           </div>
           <p class="command-status" aria-live="polite">Choose an option or type its command.</p>
         </div>
@@ -127,15 +127,31 @@
     <form class="robot-form" id="robot-form" method="dialog">
       <p class="dialog-kicker">SECURITY CHECK</p>
       <h2 id="robot-title">Confirm you are human</h2>
-      <p>Solve this quick terminal challenge before composing an email.</p>
+      <p>Solve this quick terminal challenge to reveal the protected email address.</p>
       <label for="robot-answer"><output id="robot-question"></output></label>
       <input id="robot-answer" name="robot-answer" type="text" inputmode="numeric" autocomplete="off" required>
       <p class="robot-message" id="robot-message" aria-live="polite"></p>
       <div class="dialog-actions">
         <button type="button" data-close-dialog>cancel</button>
-        <button type="submit">verify &amp; compose</button>
+        <button type="submit">verify &amp; reveal</button>
       </div>
     </form>
+    <section class="email-reveal" id="email-reveal" hidden aria-labelledby="email-reveal-title">
+      <p class="dialog-kicker">VERIFICATION PASSED</p>
+      <h2 id="email-reveal-title">Email unlocked</h2>
+      <p>Copy the address or open it in your email client.</p>
+      <div class="email-result">
+        <code id="protected-email"></code>
+        <button class="icon-action" id="copy-email" type="button" aria-label="Copy email address" title="Copy email address">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="11" height="11" rx="1"></rect><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"></path></svg>
+        </button>
+        <a class="icon-action" id="open-email" href="#" aria-label="Open email client" title="Open email client">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1"></rect><path d="m4 7 8 6 8-6"></path></svg>
+        </a>
+      </div>
+      <p class="copy-status" id="copy-status" aria-live="polite"></p>
+      <div class="dialog-actions"><button type="button" data-close-dialog>close</button></div>
+    </section>
   </dialog>
 </body>
 </html>
