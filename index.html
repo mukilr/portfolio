@@ -8,8 +8,8 @@
   <script>document.documentElement.classList.add('js')</script>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23020604'/%3E%3Cpath d='M14 18h36v28H14z' fill='none' stroke='%2348ff8b' stroke-width='3'/%3E%3Cpath d='m21 27 7 5-7 5M32 38h11' fill='none' stroke='%2348ff8b' stroke-width='3'/%3E%3C/svg%3E">
   <title>Mukil Rajeev | Terminal Portfolio</title>
-  <link rel="stylesheet" href="./styles.css?v=terminal-2">
-  <script src="./script.js?v=terminal-2" defer></script>
+  <link rel="stylesheet" href="./styles.css?v=terminal-3">
+  <script src="./script.js?v=terminal-3" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#content">Skip to content</a>
@@ -101,13 +101,41 @@
       <section class="terminal-section contact terminal-sequence" id="contact">
         <p class="command" data-stream>mukil@portfolio:~$ contact --list</p>
         <div class="terminal-output contact-links">
-          <a data-stream data-delay="120" href="mailto:mukilr@gmail.com"><span>email</span>mukilr@gmail.com</a>
+          <button type="button" data-stream data-delay="120" data-command="email"><span>email</span>verify to compose</button>
           <a data-stream data-delay="200" href="https://www.linkedin.com/in/mukil-rajeev/" target="_blank" rel="noreferrer"><span>linkedin</span>/in/mukil-rajeev</a>
           <a data-stream data-delay="280" href="resume.html"><span>resume</span>open HTML resume</a>
         </div>
-        <p class="final-prompt" data-stream data-delay="380" data-persist-cursor><span class="prompt">$</span> ready</p>
+
+        <div class="command-console" data-console>
+          <label class="visually-hidden" for="terminal-command">Terminal command</label>
+          <div class="command-input-wrap">
+            <span class="prompt" aria-hidden="true">$</span>
+            <input id="terminal-command" type="text" role="combobox" aria-autocomplete="list" aria-controls="quick-options" aria-expanded="true" placeholder="type a command..." autocomplete="off" spellcheck="false">
+          </div>
+          <div class="quick-options" id="quick-options" role="listbox" aria-label="Quick commands">
+            <button type="button" role="option" data-command="resume"><kbd>resume</kbd><span>open full resume</span></button>
+            <button type="button" role="option" data-command="replay"><kbd>replay</kbd><span>refresh animations</span></button>
+            <button type="button" role="option" data-command="email"><kbd>email</kbd><span>verify and compose</span></button>
+          </div>
+          <p class="command-status" aria-live="polite">Choose an option or type its command.</p>
+        </div>
       </section>
     </div>
   </main>
+
+  <dialog class="robot-dialog" id="robot-dialog" aria-labelledby="robot-title">
+    <form class="robot-form" id="robot-form" method="dialog">
+      <p class="dialog-kicker">SECURITY CHECK</p>
+      <h2 id="robot-title">Confirm you are human</h2>
+      <p>Solve this quick terminal challenge before composing an email.</p>
+      <label for="robot-answer"><output id="robot-question"></output></label>
+      <input id="robot-answer" name="robot-answer" type="text" inputmode="numeric" autocomplete="off" required>
+      <p class="robot-message" id="robot-message" aria-live="polite"></p>
+      <div class="dialog-actions">
+        <button type="button" data-close-dialog>cancel</button>
+        <button type="submit">verify &amp; compose</button>
+      </div>
+    </form>
+  </dialog>
 </body>
 </html>

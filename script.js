@@ -56,6 +56,10 @@ const startSequence = (sequence) => {
   if (sequence.dataset.started) return;
   sequence.dataset.started = 'true';
   sequence.querySelectorAll('[data-stream]').forEach((element) => streamElement(element));
+  const consolePanel = sequence.querySelector('[data-console]');
+  if (consolePanel) {
+    window.setTimeout(() => consolePanel.classList.add('ready'), reducedMotion ? 0 : 560);
+  }
 };
 
 if (reducedMotion || !('IntersectionObserver' in window)) {
@@ -71,3 +75,114 @@ if (reducedMotion || !('IntersectionObserver' in window)) {
 
   sequences.forEach((sequence) => observer.observe(sequence));
 }
+
+const commandInput = document.querySelector('#terminal-command');
+const optionButtons = [...document.querySelectorAll('.quick-options [data-command]')];
+const commandStatus = document.querySelector('.command-status');
+const robotDialog = document.querySelector('#robot-dialog');
+const robotForm = document.querySelector('#robot-form');
+const robotQuestion = document.querySelector('#robot-question');
+const robotAnswer = document.querySelector('#robot-answer');
+const robotMessage = document.querySelector('#robot-message');
+let expectedRobotAnswer = 0;
+let activeOption = 0;
+
+optionButtons.forEach((button, index) => {
+  button.id = `quick-option-${index}`;
+});
+
+const visibleOptions = () => optionButtons.filter((button) => !button.hidden);
+
+const setActiveOption = (index) => {
+  const options = visibleOptions();
+  optionButtons.forEach((button) => {
+    button.classList.remove('active');
+    button.setAttribute('aria-selected', 'false');
+  });
+  if (!options.length) {
+    commandInput.removeAttribute('aria-activedescendant');
+    return;
+  }
+  activeOption = (index + options.length) % options.length;
+  const active = options[activeOption];
+  active.classList.add('active');
+  active.setAttribute('aria-selected', 'true');
+  commandInput.setAttribute('aria-activedescendant', active.id);
+};
+
+const filterOptions = () => {
+  const query = commandInput.value.trim().toLowerCase();
+  optionButtons.forEach((button) => {
+    button.hidden = !button.textContent.toLowerCase().includes(query);
+  });
+  setActiveOption(0);
+  commandStatus.textContent = visibleOptions().length
+    ? 'Press Enter to run the selected command.'
+    : `command not found: ${query}`;
+};
+
+const openRobotCheck = () => {
+  const first = Math.floor(Math.random() * 8) + 2;
+  const second = Math.floor(Math.random() * 8) + 2;
+  expectedRobotAnswer = first + second;
+  robotQuestion.textContent = `$ verify-human --answer "${first} + ${second} = ?"`;
+  robotAnswer.value = '';
+  robotMessage.textContent = '';
+  robotDialog.showModal();
+  window.setTimeout(() => robotAnswer.focus(), 0);
+};
+
+const executeCommand = (command) => {
+  commandStatus.textContent = `running: ${command}`;
+  if (command === 'resume') {
+    window.location.href = 'resume.html';
+    return;
+  }
+  if (command === 'replay') {
+    const url = new URL(window.location.href);
+    url.searchParams.set('replay', Date.now());
+    url.hash = '';
+    window.location.href = url;
+    return;
+  }
+  if (command === 'email') openRobotCheck();
+};
+
+commandInput.addEventListener('input', filterOptions);
+commandInput.addEventListener('focus', () => commandInput.setAttribute('aria-expanded', 'true'));
+commandInput.addEventListener('keydown', (event) => {
+  if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+    event.preventDefault();
+    setActiveOption(activeOption + (event.key === 'ArrowDown' ? 1 : -1));
+  }
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    const exact = optionButtons.find((button) => button.dataset.command === commandInput.value.trim().toLowerCase());
+    const selected = exact || visibleOptions()[activeOption];
+    if (selected) executeCommand(selected.dataset.command);
+  }
+  if (event.key === 'Escape') {
+    commandInput.value = '';
+    filterOptions();
+    commandInput.blur();
+  }
+});
+
+document.querySelectorAll('[data-command]').forEach((button) => {
+  button.addEventListener('click', () => executeCommand(button.dataset.command));
+});
+
+robotForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  if (Number(robotAnswer.value.trim()) !== expectedRobotAnswer) {
+    robotMessage.textContent = 'Verification failed. Check the answer and try again.';
+    robotAnswer.select();
+    return;
+  }
+  robotMessage.textContent = 'Human verified. Opening your email app...';
+  robotDialog.close();
+  window.location.href = 'mailto:mukilr@gmail.com?subject=Portfolio%20inquiry';
+});
+
+document.querySelector('[data-close-dialog]').addEventListener('click', () => robotDialog.close());
+setActiveOption(0);
