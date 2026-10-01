@@ -3,83 +3,97 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Mukil Rajeev is a senior software engineer focused on backend systems, agentic AI, APIs, and dependable software.">
-  <meta name="theme-color" content="#071426">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%23071426'/%3E%3Cpath d='M15 46V18h7l10 15 10-15h7v28h-7V29L32 44 22 29v17z' fill='%23c8ff55'/%3E%3C/svg%3E">
-  <title>Mukil Rajeev | Software Engineer</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="script.js" defer></script>
+  <meta name="description" content="Mukil Rajeev is a senior software engineer focused on backend systems, APIs, relational data, and agentic AI.">
+  <meta name="theme-color" content="#020604">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23020604'/%3E%3Cpath d='M14 18h36v28H14z' fill='none' stroke='%2348ff8b' stroke-width='3'/%3E%3Cpath d='m21 27 7 5-7 5M32 38h11' fill='none' stroke='%2348ff8b' stroke-width='3'/%3E%3C/svg%3E">
+  <title>Mukil Rajeev | Terminal Portfolio</title>
+  <link rel="stylesheet" href="./styles.css?v=terminal-1">
+  <script src="./script.js?v=terminal-1" defer></script>
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
-  <header class="site-header" data-header>
-    <a class="brand" href="#top" aria-label="Mukil Rajeev home"><span class="brand-mark">MR</span><span>Mukil Rajeev</span></a>
-    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-menu-toggle><span class="sr-only">Toggle navigation</span><i></i><i></i></button>
-    <nav class="site-nav" id="site-nav" aria-label="Primary navigation" data-nav>
-      <a href="#about">About</a><a href="#experience">Experience</a><a href="#expertise">Expertise</a><a href="#contact">Contact</a><a class="nav-cta" href="resume.html">Resume</a>
+  <a class="skip-link" href="#content">Skip to content</a>
+
+  <main class="terminal" id="content">
+    <header class="terminal-bar">
+      <div class="window-controls" aria-hidden="true"><span></span><span></span><span></span></div>
+      <p>mukil@portfolio: ~</p>
+      <span class="connection"><i></i> online</span>
+    </header>
+
+    <nav class="terminal-nav" aria-label="Portfolio sections">
+      <a href="#skills">skills</a>
+      <a href="#systems">systems</a>
+      <a href="#experience">experience</a>
+      <a href="#education">education</a>
+      <a href="resume.html">resume</a>
     </nav>
-  </header>
 
-  <main id="main">
-    <section class="hero" id="top">
-      <div class="hero-grid" aria-hidden="true"></div><div class="orbit orbit-one" aria-hidden="true"></div><div class="orbit orbit-two" aria-hidden="true"></div>
-      <div class="hero-copy">
-        <p class="eyebrow reveal">Senior Member of Technical Staff · Oracle</p>
-        <h1 class="reveal">Building dependable systems for an <em>AI-shaped world.</em></h1>
-        <p class="hero-intro reveal">I’m Mukil, a software engineer in Austin working across backend architecture, APIs, data systems, and agentic AI.</p>
-        <div class="hero-actions reveal"><a class="button primary" href="#experience">Explore my work</a><a class="button quiet" href="mailto:mukilr@gmail.com">Start a conversation</a></div>
-      </div>
-      <aside class="console reveal" aria-label="Professional snapshot">
-        <div class="console-bar"><span></span><span></span><span></span><p>profile.ts</p></div>
-        <pre><code><b>const</b> engineer = {
-  name: <mark>"Mukil Rajeev"</mark>,
-  basedIn: <mark>"Austin, TX"</mark>,
-  building: [
-    <mark>"backend systems"</mark>,
-    <mark>"agentic AI"</mark>,
-    <mark>"reliable APIs"</mark>
-  ],
-  mindset: <mark>"curious + pragmatic"</mark>
-};</code></pre>
-        <div class="console-status"><span></span> Open to thoughtful conversations</div>
-      </aside>
-      <div class="hero-meta reveal"><div><strong>15+</strong><span>Years building software</span></div><div><strong>5</strong><span>Technology companies</span></div><div><strong>88</strong><span>Skills on LinkedIn</span></div></div>
-    </section>
+    <div class="terminal-body">
+      <section class="intro" aria-labelledby="name">
+        <p class="command" data-type>mukil@portfolio:~$ whoami</p>
+        <h1 id="name" data-type>Mukil Rajeev</h1>
+        <p class="role" data-type>Senior Member of Technical Staff @ Oracle</p>
+        <p class="meta" data-type>Austin, Texas · backend engineering · agentic AI</p>
+        <p class="status"><span class="prompt">$</span> Building dependable systems for an AI-shaped world.<span class="cursor" aria-hidden="true"></span></p>
+      </section>
 
-    <section class="section" id="about">
-      <div class="section-label reveal"><span>01</span> About</div>
-      <div class="about-grid"><h2 class="reveal">A hammer in one hand.<br><em>Gen AI in the other.</em></h2><div class="about-copy reveal"><p class="lead">I like hard engineering problems: the kind that reward clear thinking, durable architecture, and careful execution.</p><p>My career has moved from web development and APIs to backend platforms, relational data, and the emerging world of agentic AI. Along the way, I’ve grown through engineering roles at Cognizant, Symantec, Gartner, Alation, and Oracle.</p><p class="note">I’m also a firm believer that no piece of code should work the first time — unless it’s Hello World.</p></div></div>
-    </section>
+      <section class="terminal-section reveal" id="skills">
+        <p class="command">mukil@portfolio:~$ cat skills.txt</p>
+        <div class="terminal-output tag-grid">
+          <span>backend engineering</span>
+          <span>agentic AI development</span>
+          <span>API development</span>
+          <span>relational databases</span>
+          <span>web development</span>
+          <span>cyber security</span>
+          <span>software documentation</span>
+          <span>markup languages</span>
+        </div>
+      </section>
 
-    <section class="section wide light" id="experience">
-      <div class="section-label reveal"><span>02</span> Experience</div>
-      <div class="section-heading reveal"><h2>Where I’ve built</h2><p>A career shaped by increasingly complex systems, broader ownership, and continuous learning.</p></div>
-      <div class="timeline">
-        <article class="timeline-item reveal"><time>2025 — Now</time><div><p class="kicker">Oracle · Austin, Texas</p><h3>Senior Member of Technical Staff</h3><p>Working at the intersection of large-scale engineering and new AI capabilities.</p></div><span class="pill">Current</span></article>
-        <article class="timeline-item reveal"><time>2018 — 2025</time><div><p class="kicker">Alation · United States and Chennai</p><h3>Senior Software Engineer</h3><p>Progressed from Backend Engineer to Senior Software Engineer over nearly seven years.</p></div></article>
-        <article class="timeline-item reveal"><time>2014 — 2018</time><div><p class="kicker">Gartner · Chennai</p><h3>Software Engineer II</h3><p>Built experience across software documentation, APIs, and production engineering.</p></div></article>
-        <article class="timeline-item reveal"><time>2014</time><div><p class="kicker">Symantec · Chennai</p><h3>Intern, Masters Level</h3><p>Applied graduate study to web development and API-focused engineering.</p></div></article>
-        <article class="timeline-item reveal"><time>2010 — 2012</time><div><p class="kicker">Cognizant Technology Solutions · India</p><h3>Programmer Analyst</h3><p>Started a professional engineering career in web and software development.</p></div></article>
-      </div>
-    </section>
+      <section class="terminal-section reveal" id="systems">
+        <p class="command">mukil@portfolio:~$ tree systems/</p>
+        <div class="terminal-output tree" aria-label="Frameworks and systems">
+          <p>systems/</p>
+          <p><span>├──</span> backend_services</p>
+          <p><span>├──</span> restful_apis</p>
+          <p><span>├──</span> relational_data</p>
+          <p><span>├──</span> agentic_ai</p>
+          <p><span>├──</span> web_applications</p>
+          <p><span>└──</span> chatgpt_workflows</p>
+        </div>
+      </section>
 
-    <section class="section" id="expertise">
-      <div class="section-label reveal"><span>03</span> Expertise</div>
-      <div class="section-heading reveal"><h2>What I bring to the table</h2><p>Broad engineering range with a backend core and an eye on what comes next.</p></div>
-      <div class="cards">
-        <article class="card reveal"><span>01</span><i>{ }</i><h3>Backend engineering</h3><p>Designing services, APIs, and data-backed systems with maintainability in mind.</p><ul><li>Relational databases</li><li>API development</li><li>Software architecture</li></ul></article>
-        <article class="card featured reveal"><span>02</span><i>✦</i><h3>Agentic AI</h3><p>Exploring how capable AI agents can become useful, reliable parts of real software.</p><ul><li>ChatGPT</li><li>Agentic AI development</li><li>Human-centered systems</li></ul></article>
-        <article class="card reveal"><span>03</span><i>⌁</i><h3>Engineering craft</h3><p>Making complex systems understandable through clean implementation and documentation.</p><ul><li>Software development</li><li>Technical documentation</li><li>Web development</li></ul></article>
-      </div>
-    </section>
+      <section class="terminal-section reveal" id="experience">
+        <p class="command">mukil@portfolio:~$ history --career</p>
+        <div class="terminal-output career-list">
+          <article><time>2025 — now</time><div><h2>Oracle</h2><p>Senior Member of Technical Staff · Austin, Texas</p></div></article>
+          <article><time>2018 — 2025</time><div><h2>Alation</h2><p>Backend Engineer → Senior Software Engineer</p></div></article>
+          <article><time>2014 — 2018</time><div><h2>Gartner</h2><p>Software Engineer II · Chennai</p></div></article>
+          <article><time>2014</time><div><h2>Symantec</h2><p>Intern, Masters Level · Chennai</p></div></article>
+          <article><time>2010 — 2012</time><div><h2>Cognizant</h2><p>Programmer Analyst · India</p></div></article>
+        </div>
+      </section>
 
-    <section class="section wide education" id="education">
-      <div class="section-label reveal"><span>04</span> Education</div>
-      <div class="education-grid"><div class="reveal"><h2>Security trained.<br><em>Systems minded.</em></h2><p>Two degrees from Amrita Vishwa Vidyapeetham built the foundation for a career in software engineering.</p></div><div class="education-list"><article class="reveal"><time>2012 — 2014</time><h3>Master of Technology</h3><p>Cyber Security · Amrita Vishwa Vidyapeetham, Coimbatore</p></article><article class="reveal"><time>2006 — 2010</time><h3>Bachelor’s Degree</h3><p>Information Technology · Amrita Vishwa Vidyapeetham</p><small>Activities: Fosster ’09 and InCTF</small></article><article class="reveal"><time>2025</time><h3>Verified International Academic Qualifications</h3><p>World Education Services</p></article></div></div>
-    </section>
+      <section class="terminal-section reveal" id="education">
+        <p class="command">mukil@portfolio:~$ cat education.log</p>
+        <div class="terminal-output education-list">
+          <article><span>[2014]</span><div><h2>MTech · Cyber Security</h2><p>Amrita Vishwa Vidyapeetham, Coimbatore</p></div></article>
+          <article><span>[2010]</span><div><h2>Bachelor's · Information Technology</h2><p>Amrita Vishwa Vidyapeetham</p></div></article>
+          <article><span>[2025]</span><div><h2>Verified International Academic Qualifications</h2><p>World Education Services</p></div></article>
+        </div>
+      </section>
 
-    <section class="contact" id="contact"><p class="eyebrow reveal">Have a difficult problem?</p><h2 class="reveal">Let’s build something<br><em>worth maintaining.</em></h2><div class="contact-actions reveal"><a class="button light-button" href="mailto:mukilr@gmail.com">mukilr@gmail.com</a><a class="button quiet" href="https://www.linkedin.com/in/mukil-rajeev/" target="_blank" rel="noreferrer">LinkedIn</a></div></section>
+      <section class="terminal-section contact reveal" id="contact">
+        <p class="command">mukil@portfolio:~$ contact --list</p>
+        <div class="terminal-output contact-links">
+          <a href="mailto:mukilr@gmail.com"><span>email</span>mukilr@gmail.com</a>
+          <a href="https://www.linkedin.com/in/mukil-rajeev/" target="_blank" rel="noreferrer"><span>linkedin</span>/in/mukil-rajeev</a>
+          <a href="resume.html"><span>resume</span>open HTML resume</a>
+        </div>
+        <p class="final-prompt"><span class="prompt">$</span> ready<span class="cursor" aria-hidden="true"></span></p>
+      </section>
+    </div>
   </main>
-  <footer><a class="brand" href="#top"><span class="brand-mark">MR</span><span>Mukil Rajeev</span></a><p>Senior software engineer · Austin, Texas</p><p>© <span data-year></span> Mukil Rajeev</p></footer>
 </body>
 </html>
