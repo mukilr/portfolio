@@ -1,0 +1,108 @@
+name: Deploy portfolio to AWS
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  AWS_REGION: ${{ vars.AWS_REGION }}
+  STACK_NAME: mukil-portfolio
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Build website
+        run: npm run build
+
+      - name: Set up AWS SAM
+        uses: aws-actions/setup-sam@v3
+        with:
+          use-installer: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check deployment configuration
+        env:
+          AWS_DEPLOY_ROLE_ARN: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          CONTACT_EMAIL: ${{ secrets.CONTACT_EMAIL }}
+          RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
+          RECAPTCHA_SITE_KEY: ${{ secrets.RECAPTCHA_SITE_KEY }}
+          ALLOWED_HOSTNAME: ${{ vars.ALLOWED_HOSTNAME }}
+        run: |
+          test -n "$AWS_REGION" || { echo "AWS_REGION is not configured"; exit 1; }
+          test -n "$AWS_DEPLOY_ROLE_ARN" || { echo "AWS_DEPLOY_ROLE_ARN is not configured"; exit 1; }
+          test -n "$CONTACT_EMAIL" || { echo "CONTACT_EMAIL is not configured"; exit 1; }
+          test -n "$RECAPTCHA_SITE_KEY" || { echo "RECAPTCHA_SITE_KEY is not configured"; exit 1; }
+          test -n "$RECAPTCHA_SECRET_KEY" || { echo "RECAPTCHA_SECRET_KEY is not configured"; exit 1; }
+          test -n "$ALLOWED_HOSTNAME" || { echo "ALLOWED_HOSTNAME is not configured"; exit 1; }
+
+      - name: Authenticate to AWS with OIDC
+        uses: aws-actions/configure-aws-credentials@v6.3.0
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Build serverless backend
+        run: sam build --template-file infra/template.yaml
+
+      - name: Deploy AWS infrastructure and backend
+        env:
+          CONTACT_EMAIL: ${{ secrets.CONTACT_EMAIL }}
+          RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
+          RECAPTCHA_SITE_KEY: ${{ secrets.RECAPTCHA_SITE_KEY }}
+          ALLOWED_HOSTNAME: ${{ vars.ALLOWED_HOSTNAME }}
+        run: >-
+          sam deploy
+          --stack-name "$STACK_NAME"
+          --region "$AWS_REGION"
+          --resolve-s3
+          --capabilities CAPABILITY_IAM
+          --no-confirm-changeset
+          --no-fail-on-empty-changeset
+          --parameter-overrides
+          RecaptchaSiteKey="$RECAPTCHA_SITE_KEY"
+          RecaptchaSecretKey="$RECAPTCHA_SECRET_KEY"
+          ContactEmail="$CONTACT_EMAIL"
+          AllowedHostname="$ALLOWED_HOSTNAME"
+
+      - name: Read deployment outputs
+        id: stack
+        run: |
+          bucket=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" --query "Stacks[0].Outputs[?OutputKey=='SiteBucketName'].OutputValue" --output text)
+          distribution=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" --query "Stacks[0].Outputs[?OutputKey=='DistributionId'].OutputValue" --output text)
+          url=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" --query "Stacks[0].Outputs[?OutputKey=='SiteUrl'].OutputValue" --output text)
+          echo "bucket=$bucket" >> "$GITHUB_OUTPUT"
+          echo "distribution=$distribution" >> "$GITHUB_OUTPUT"
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Upload website to S3
+        run: >-
+          aws s3 sync dist/ "s3://${{ steps.stack.outputs.bucket }}/"
+          --delete
+          --exclude "server/*"
+          --cache-control "public,max-age=300"
+
+      - name: Refresh CloudFront
+        run: aws cloudfront create-invalidation --distribution-id "${{ steps.stack.outputs.distribution }}" --paths "/*"
+
+      - name: Publish deployment URL
+        run: echo "Portfolio deployed to ${{ steps.stack.outputs.url }}" >> "$GITHUB_STEP_SUMMARY"
