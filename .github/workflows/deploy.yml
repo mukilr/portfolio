@@ -116,6 +116,18 @@ jobs:
           if [ -n "$failed_resource" ]; then
             echo "::error title=AWS resource creation failed::$failed_resource"
           fi
+          failure_reason=$(aws cloudformation describe-stack-events \
+            --stack-name "$STACK_NAME" \
+            --query "StackEvents[?contains(ResourceStatus, 'FAILED') && ResourceType != 'AWS::CloudFormation::Stack'].ResourceStatusReason | [0]" \
+            --output text 2>/dev/null || true)
+          denied_action=$(printf '%s' "$failure_reason" | grep -Eo 'iam:[A-Za-z0-9*]+' | head -n 1 || true)
+          if [ -n "$denied_action" ]; then
+            echo "::error title=AWS denied IAM action::$denied_action"
+          elif printf '%s' "$failure_reason" | grep -qi 'already exists'; then
+            echo "::error title=AWS resource conflict::The Lambda execution role already exists outside this stack."
+          else
+            echo "::error title=AWS failure category::No denied IAM action or existing-resource conflict was detected."
+          fi
 
       - name: Read deployment outputs
         id: stack
