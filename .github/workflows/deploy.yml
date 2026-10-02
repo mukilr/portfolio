@@ -78,6 +78,14 @@ jobs:
           fi
           exit "$result"
 
+      - name: Clear failed initial stack
+        run: |
+          stack_status=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" --query 'Stacks[0].StackStatus' --output text 2>/dev/null || true)
+          if [ "$stack_status" = "ROLLBACK_COMPLETE" ]; then
+            aws cloudformation delete-stack --stack-name "$STACK_NAME"
+            aws cloudformation wait stack-delete-complete --stack-name "$STACK_NAME"
+          fi
+
       - name: Deploy AWS infrastructure and backend
         env:
           CONTACT_EMAIL: ${{ secrets.CONTACT_EMAIL }}
@@ -89,7 +97,7 @@ jobs:
           --stack-name "$STACK_NAME"
           --region "$AWS_REGION"
           --resolve-s3
-          --capabilities CAPABILITY_IAM
+          --capabilities CAPABILITY_NAMED_IAM
           --no-confirm-changeset
           --no-fail-on-empty-changeset
           --parameter-overrides
