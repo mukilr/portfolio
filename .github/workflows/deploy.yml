@@ -106,6 +106,17 @@ jobs:
           ContactEmail="$CONTACT_EMAIL"
           AllowedHostname="$ALLOWED_HOSTNAME"
 
+      - name: Identify failed AWS resource
+        if: failure()
+        run: |
+          failed_resource=$(aws cloudformation describe-stack-events \
+            --stack-name "$STACK_NAME" \
+            --query "StackEvents[?contains(ResourceStatus, 'FAILED')].[LogicalResourceId,ResourceType] | [0]" \
+            --output text 2>/dev/null || true)
+          if [ -n "$failed_resource" ]; then
+            echo "::error title=AWS resource creation failed::$failed_resource"
+          fi
+
       - name: Read deployment outputs
         id: stack
         run: |
