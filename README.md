@@ -32,7 +32,7 @@ Complete this one-time setup:
 
 1. In AWS IAM, add GitHub as an OpenID Connect provider with URL `https://token.actions.githubusercontent.com` and audience `sts.amazonaws.com`.
 2. Create an IAM role that trusts the `mukilr/portfolio` repository on the `main` branch and grants the deployment permissions needed for CloudFormation/SAM, S3, CloudFront, API Gateway, Lambda, IAM role creation, and CloudWatch Logs.
-3. In the GitHub repository, open **Settings → Environments**, create an environment named `production`, and add these secrets:
+3. In the GitHub repository, open **Settings → Environments**, create an environment named `prod`, and add these secrets:
    - `AWS_DEPLOY_ROLE_ARN` — ARN of the IAM role from step 2.
    - `RECAPTCHA_SITE_KEY` — Google reCAPTCHA v2 checkbox site key.
    - `RECAPTCHA_SECRET_KEY` — matching private key.
