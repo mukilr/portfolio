@@ -123,6 +123,7 @@ Resources:
           - Id: ApiOrigin
             DomainName: !Select [2, !Split ['/', !GetAtt ContactFunctionUrl.FunctionUrl]]
             CustomOriginConfig:
+              HTTPSPort: 443
               OriginProtocolPolicy: https-only
               OriginSSLProtocols:
                 - TLSv1.2
@@ -136,10 +137,7 @@ Resources:
           CachedMethods:
             - GET
             - HEAD
-          ForwardedValues:
-            QueryString: false
-            Cookies:
-              Forward: none
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
         CacheBehaviors:
           - PathPattern: /api/contact/*
             TargetOriginId: ApiOrigin
