@@ -62,7 +62,17 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Build serverless backend
-        run: sam build --template-file infra/template.yaml
+        run: |
+          set +e
+          sam build --template-file infra/template.yaml 2>&1 | tee sam-build.log
+          result=${PIPESTATUS[0]}
+          {
+            echo '### SAM build output'
+            echo '```text'
+            cat sam-build.log
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit "$result"
 
       - name: Deploy AWS infrastructure and backend
         env:
