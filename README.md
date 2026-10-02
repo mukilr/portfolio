@@ -43,20 +43,24 @@ Complete this one-time setup:
 
 The first workflow run creates the S3 bucket, CloudFront distribution, Lambda endpoint, and Lambda function. Its **Summary** page contains the generated CloudFront URL. Add that hostname to the Google reCAPTCHA key and set `ALLOWED_HOSTNAME` to the same value, then rerun the workflow.
 
-## Custom domain: `www.mukil.xyz`
+## Custom domain: `mukil.xyz`
 
-1. In AWS Certificate Manager in **us-east-1**, request a public certificate for `www.mukil.xyz`.
-2. Choose DNS validation and add the ACM validation CNAME to the `mukil.xyz` DNS records in GoDaddy.
-3. After ACM shows the certificate as **Issued**, add these variables to the GitHub `prod` environment:
+Both `mukil.xyz` and `www.mukil.xyz` are served directly by CloudFront. Route 53 supplies the apex alias records that ordinary CNAME records cannot provide.
+
+1. Create a Route 53 public hosted zone named `mukil.xyz`.
+2. Replace the domain's GoDaddy nameservers with the four nameservers listed in the Route 53 hosted zone.
+3. In AWS Certificate Manager in **us-east-1**, request a public certificate containing both `mukil.xyz` and `www.mukil.xyz`.
+4. Choose DNS validation and create the validation records in Route 53. Wait for the certificate to become **Issued**.
+5. Add these variables to the GitHub `prod` environment:
    - `CUSTOM_DOMAIN_NAME` = `www.mukil.xyz`
+   - `APEX_DOMAIN_NAME` = `mukil.xyz`
    - `ACM_CERTIFICATE_ARN` = the issued certificate ARN
+   - `ROUTE53_HOSTED_ZONE_ID` = the Route 53 hosted zone ID
    - `ALLOWED_HOSTNAME` = `www.mukil.xyz`
-4. Add `www.mukil.xyz` to the allowed domains for the Google reCAPTCHA site key.
-5. Run the deployment workflow. Its summary includes the CloudFront hostname.
-6. In GoDaddy DNS, add a CNAME with name `www` and value equal to that CloudFront hostname, without `https://`.
-7. In GoDaddy forwarding, permanently forward `mukil.xyz` to `https://www.mukil.xyz` with HTTPS enabled.
+6. Add `mukil.xyz` and `www.mukil.xyz` to the allowed domains for the Google reCAPTCHA site key.
+7. Run the deployment workflow. CloudFormation adds IPv4 and IPv6 Route 53 aliases for both names and attaches both names to the CloudFront distribution.
 
-The deployment only enables the CloudFront custom-domain settings when both custom-domain variables are present, so the generated CloudFront URL remains usable while the certificate is being validated.
+The deployment only enables custom-domain settings when their variables are present, so the generated CloudFront URL remains usable during setup.
 
 ## Structure
 

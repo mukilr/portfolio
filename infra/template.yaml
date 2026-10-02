@@ -22,11 +22,25 @@ Parameters:
     Type: String
     Default: ''
     Description: Optional ACM certificate ARN from us-east-1 for the custom hostname.
+  ApexDomainName:
+    Type: String
+    Default: ''
+    Description: Optional apex hostname, such as mukil.xyz.
+  Route53HostedZoneId:
+    Type: String
+    Default: ''
+    Description: Optional Route 53 public hosted zone ID used for apex and www alias records.
 
 Conditions:
   UseCustomDomain: !And
     - !Not [!Equals [!Ref CustomDomainName, '']]
     - !Not [!Equals [!Ref CertificateArn, '']]
+  UseApexDomain: !And
+    - !Condition UseCustomDomain
+    - !Not [!Equals [!Ref ApexDomainName, '']]
+  ConfigureRoute53: !And
+    - !Condition UseApexDomain
+    - !Not [!Equals [!Ref Route53HostedZoneId, '']]
 
 Resources:
   SiteBucket:
@@ -129,7 +143,11 @@ Resources:
         DefaultRootObject: index.html
         Aliases: !If
           - UseCustomDomain
-          - - !Ref CustomDomainName
+          - !If
+            - UseApexDomain
+            - - !Ref ApexDomainName
+              - !Ref CustomDomainName
+            - - !Ref CustomDomainName
           - !Ref AWS::NoValue
         ViewerCertificate: !If
           - UseCustomDomain
@@ -180,6 +198,37 @@ Resources:
               - OPTIONS
             CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad
             OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac
+
+  DomainRecords:
+    Type: AWS::Route53::RecordSetGroup
+    Condition: ConfigureRoute53
+    Properties:
+      HostedZoneId: !Ref Route53HostedZoneId
+      RecordSets:
+        - Name: !Ref ApexDomainName
+          Type: A
+          AliasTarget:
+            DNSName: !GetAtt Distribution.DomainName
+            HostedZoneId: Z2FDTNDATAQYW2
+            EvaluateTargetHealth: false
+        - Name: !Ref ApexDomainName
+          Type: AAAA
+          AliasTarget:
+            DNSName: !GetAtt Distribution.DomainName
+            HostedZoneId: Z2FDTNDATAQYW2
+            EvaluateTargetHealth: false
+        - Name: !Ref CustomDomainName
+          Type: A
+          AliasTarget:
+            DNSName: !GetAtt Distribution.DomainName
+            HostedZoneId: Z2FDTNDATAQYW2
+            EvaluateTargetHealth: false
+        - Name: !Ref CustomDomainName
+          Type: AAAA
+          AliasTarget:
+            DNSName: !GetAtt Distribution.DomainName
+            HostedZoneId: Z2FDTNDATAQYW2
+            EvaluateTargetHealth: false
 
   SiteBucketPolicy:
     Type: AWS::S3::BucketPolicy
