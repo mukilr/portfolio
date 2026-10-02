@@ -126,7 +126,12 @@ jobs:
           elif printf '%s' "$failure_reason" | grep -qi 'already exists'; then
             echo "::error title=AWS resource conflict::The Lambda execution role already exists outside this stack."
           else
-            echo "::error title=AWS failure category::No denied IAM action or existing-resource conflict was detected."
+            error_code=$(printf '%s' "$failure_reason" | grep -Eo '(Error Code|HandlerErrorCode):? [A-Za-z0-9._-]+' | head -n 1 || true)
+            if [ -n "$error_code" ]; then
+              echo "::error title=AWS service error::$error_code"
+            else
+              echo "::error title=AWS failure category::No denied service action, resource conflict, or service error code was detected."
+            fi
           fi
 
       - name: Read deployment outputs
