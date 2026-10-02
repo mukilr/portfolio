@@ -31,7 +31,10 @@ const verifyRecaptcha = async (token, request, env) => {
   const result = await response.json();
   if (!result.success) return false;
 
-  if (env.ALLOWED_HOSTNAME && result.hostname !== env.ALLOWED_HOSTNAME) return false;
+  if (env.ALLOWED_HOSTNAME) {
+    const allowedHostnames = env.ALLOWED_HOSTNAME.split(',').map((hostname) => hostname.trim());
+    if (!allowedHostnames.includes(result.hostname)) return false;
+  }
   return true;
 };
 

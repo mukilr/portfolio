@@ -13,7 +13,7 @@ Parameters:
     NoEcho: true
   AllowedHostname:
     Type: String
-    Description: Hostname registered with Google reCAPTCHA, without https://.
+    Description: Comma-separated hostnames registered with Google reCAPTCHA, without https://.
   CustomDomainName:
     Type: String
     Default: ''

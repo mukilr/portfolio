@@ -56,7 +56,7 @@ Both `mukil.xyz` and `www.mukil.xyz` are served directly by CloudFront. Route 53
    - `APEX_DOMAIN_NAME` = `mukil.xyz`
    - `ACM_CERTIFICATE_ARN` = the issued certificate ARN
    - `ROUTE53_HOSTED_ZONE_ID` = the Route 53 hosted zone ID
-   - `ALLOWED_HOSTNAME` = `www.mukil.xyz`
+   - `ALLOWED_HOSTNAME` = `mukil.xyz,www.mukil.xyz`
 6. Add `mukil.xyz` and `www.mukil.xyz` to the allowed domains for the Google reCAPTCHA site key.
 7. Run the deployment workflow. CloudFormation adds IPv4 and IPv6 Route 53 aliases for both names and attaches both names to the CloudFront distribution.
 
