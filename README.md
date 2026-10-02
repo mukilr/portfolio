@@ -43,7 +43,20 @@ Complete this one-time setup:
 
 The first workflow run creates the S3 bucket, CloudFront distribution, Lambda endpoint, and Lambda function. Its **Summary** page contains the generated CloudFront URL. Add that hostname to the Google reCAPTCHA key and set `ALLOWED_HOSTNAME` to the same value, then rerun the workflow.
 
-For a custom domain, point the domain at CloudFront, attach an ACM certificate issued in `us-east-1`, register the custom hostname in reCAPTCHA, and update `ALLOWED_HOSTNAME`.
+## Custom domain: `www.mukil.xyz`
+
+1. In AWS Certificate Manager in **us-east-1**, request a public certificate for `www.mukil.xyz`.
+2. Choose DNS validation and add the ACM validation CNAME to the `mukil.xyz` DNS records in GoDaddy.
+3. After ACM shows the certificate as **Issued**, add these variables to the GitHub `prod` environment:
+   - `CUSTOM_DOMAIN_NAME` = `www.mukil.xyz`
+   - `ACM_CERTIFICATE_ARN` = the issued certificate ARN
+   - `ALLOWED_HOSTNAME` = `www.mukil.xyz`
+4. Add `www.mukil.xyz` to the allowed domains for the Google reCAPTCHA site key.
+5. Run the deployment workflow. Its summary includes the CloudFront hostname.
+6. In GoDaddy DNS, add a CNAME with name `www` and value equal to that CloudFront hostname, without `https://`.
+7. In GoDaddy forwarding, permanently forward `mukil.xyz` to `https://www.mukil.xyz` with HTTPS enabled.
+
+The deployment only enables the CloudFront custom-domain settings when both custom-domain variables are present, so the generated CloudFront URL remains usable while the certificate is being validated.
 
 ## Structure
 

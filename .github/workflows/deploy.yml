@@ -47,6 +47,8 @@ jobs:
           RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
           RECAPTCHA_SITE_KEY: ${{ secrets.RECAPTCHA_SITE_KEY }}
           ALLOWED_HOSTNAME: ${{ vars.ALLOWED_HOSTNAME || secrets.ALLOWED_HOSTNAME }}
+          CUSTOM_DOMAIN_NAME: ${{ vars.CUSTOM_DOMAIN_NAME }}
+          ACM_CERTIFICATE_ARN: ${{ vars.ACM_CERTIFICATE_ARN || secrets.ACM_CERTIFICATE_ARN }}
         run: |
           test -n "$AWS_REGION" || { echo "AWS_REGION is not configured"; exit 1; }
           test -n "$AWS_DEPLOY_ROLE_ARN" || { echo "AWS_DEPLOY_ROLE_ARN is not configured"; exit 1; }
@@ -54,6 +56,10 @@ jobs:
           test -n "$RECAPTCHA_SITE_KEY" || { echo "RECAPTCHA_SITE_KEY is not configured"; exit 1; }
           test -n "$RECAPTCHA_SECRET_KEY" || { echo "RECAPTCHA_SECRET_KEY is not configured"; exit 1; }
           test -n "$ALLOWED_HOSTNAME" || { echo "ALLOWED_HOSTNAME is not configured"; exit 1; }
+          if { [ -n "$CUSTOM_DOMAIN_NAME" ] && [ -z "$ACM_CERTIFICATE_ARN" ]; } || { [ -z "$CUSTOM_DOMAIN_NAME" ] && [ -n "$ACM_CERTIFICATE_ARN" ]; }; then
+            echo "CUSTOM_DOMAIN_NAME and ACM_CERTIFICATE_ARN must be configured together"
+            exit 1
+          fi
 
       - name: Authenticate to AWS with OIDC
         uses: aws-actions/configure-aws-credentials@v6.3.0
@@ -92,6 +98,8 @@ jobs:
           RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
           RECAPTCHA_SITE_KEY: ${{ secrets.RECAPTCHA_SITE_KEY }}
           ALLOWED_HOSTNAME: ${{ vars.ALLOWED_HOSTNAME || secrets.ALLOWED_HOSTNAME }}
+          CUSTOM_DOMAIN_NAME: ${{ vars.CUSTOM_DOMAIN_NAME }}
+          ACM_CERTIFICATE_ARN: ${{ vars.ACM_CERTIFICATE_ARN || secrets.ACM_CERTIFICATE_ARN }}
         run: >-
           sam deploy
           --stack-name "$STACK_NAME"
@@ -105,6 +113,8 @@ jobs:
           RecaptchaSecretKey="$RECAPTCHA_SECRET_KEY"
           ContactEmail="$CONTACT_EMAIL"
           AllowedHostname="$ALLOWED_HOSTNAME"
+          CustomDomainName="$CUSTOM_DOMAIN_NAME"
+          CertificateArn="$ACM_CERTIFICATE_ARN"
 
       - name: Identify failed AWS resource
         if: failure()

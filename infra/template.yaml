@@ -14,6 +14,19 @@ Parameters:
   AllowedHostname:
     Type: String
     Description: Hostname registered with Google reCAPTCHA, without https://.
+  CustomDomainName:
+    Type: String
+    Default: ''
+    Description: Optional custom hostname for CloudFront, such as www.mukil.xyz.
+  CertificateArn:
+    Type: String
+    Default: ''
+    Description: Optional ACM certificate ARN from us-east-1 for the custom hostname.
+
+Conditions:
+  UseCustomDomain: !And
+    - !Not [!Equals [!Ref CustomDomainName, '']]
+    - !Not [!Equals [!Ref CertificateArn, '']]
 
 Resources:
   SiteBucket:
@@ -114,6 +127,16 @@ Resources:
         HttpVersion: http2and3
         PriceClass: PriceClass_100
         DefaultRootObject: index.html
+        Aliases: !If
+          - UseCustomDomain
+          - - !Ref CustomDomainName
+          - !Ref AWS::NoValue
+        ViewerCertificate: !If
+          - UseCustomDomain
+          - AcmCertificateArn: !Ref CertificateArn
+            MinimumProtocolVersion: TLSv1.2_2021
+            SslSupportMethod: sni-only
+          - CloudFrontDefaultCertificate: true
         Origins:
           - Id: SiteOrigin
             DomainName: !GetAtt SiteBucket.RegionalDomainName
@@ -181,4 +204,9 @@ Outputs:
   DistributionId:
     Value: !Ref Distribution
   SiteUrl:
-    Value: !Sub 'https://${Distribution.DomainName}'
+    Value: !If
+      - UseCustomDomain
+      - !Sub 'https://${CustomDomainName}'
+      - !Sub 'https://${Distribution.DomainName}'
+  CloudFrontDomainName:
+    Value: !GetAtt Distribution.DomainName
