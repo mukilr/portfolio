@@ -101,39 +101,6 @@ Resources:
         SigningBehavior: always
         SigningProtocol: sigv4
 
-  ApiCachePolicy:
-    Type: AWS::CloudFront::CachePolicy
-    Properties:
-      CachePolicyConfig:
-        Name: !Sub '${AWS::StackName}-api-no-cache'
-        DefaultTTL: 0
-        MaxTTL: 0
-        MinTTL: 0
-        ParametersInCacheKeyAndForwardedToOrigin:
-          CookiesConfig:
-            CookieBehavior: none
-          EnableAcceptEncodingBrotli: true
-          EnableAcceptEncodingGzip: true
-          HeadersConfig:
-            HeaderBehavior: none
-          QueryStringsConfig:
-            QueryStringBehavior: none
-
-  ApiOriginRequestPolicy:
-    Type: AWS::CloudFront::OriginRequestPolicy
-    Properties:
-      OriginRequestPolicyConfig:
-        Name: !Sub '${AWS::StackName}-api-origin'
-        CookiesConfig:
-          CookieBehavior: none
-        HeadersConfig:
-          HeaderBehavior: whitelist
-          Headers:
-            - Content-Type
-            - Origin
-        QueryStringsConfig:
-          QueryStringBehavior: none
-
   Distribution:
     Type: AWS::CloudFront::Distribution
     Properties:
@@ -185,8 +152,8 @@ Resources:
               - GET
               - HEAD
               - OPTIONS
-            CachePolicyId: !Ref ApiCachePolicy
-            OriginRequestPolicyId: !Ref ApiOriginRequestPolicy
+            CachePolicyId: 413f9f24-6f7d-46a7-9f33-5b5f7e26e54c
+            OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac
 
   SiteBucketPolicy:
     Type: AWS::S3::BucketPolicy
