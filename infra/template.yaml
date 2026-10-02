@@ -48,19 +48,6 @@ Resources:
           RECAPTCHA_SECRET_KEY: !Ref RecaptchaSecretKey
           CONTACT_EMAIL: !Ref ContactEmail
           ALLOWED_HOSTNAME: !Ref AllowedHostname
-      Events:
-        GetConfig:
-          Type: HttpApi
-          Properties:
-            ApiId: !Ref ContactApi
-            Path: /api/contact/config
-            Method: GET
-        UnlockEmail:
-          Type: HttpApi
-          Properties:
-            ApiId: !Ref ContactApi
-            Path: /api/contact/unlock
-            Method: POST
 
   ContactFunctionRole:
     Type: AWS::IAM::Role
@@ -87,10 +74,28 @@ Resources:
                   - logs:PutLogEvents
                 Resource: !Sub 'arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*'
 
-  ContactApi:
-    Type: AWS::Serverless::HttpApi
+  ContactFunctionUrl:
+    Type: AWS::Lambda::Url
     Properties:
-      StageName: '$default'
+      AuthType: NONE
+      InvokeMode: BUFFERED
+      TargetFunctionArn: !GetAtt ContactFunction.Arn
+
+  ContactFunctionUrlPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunctionUrl
+      FunctionName: !Ref ContactFunction
+      FunctionUrlAuthType: NONE
+      Principal: '*'
+
+  ContactFunctionInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref ContactFunction
+      InvokedViaFunctionUrl: true
+      Principal: '*'
 
   OriginAccessControl:
     Type: AWS::CloudFront::OriginAccessControl
@@ -116,7 +121,7 @@ Resources:
             S3OriginConfig:
               OriginAccessIdentity: ''
           - Id: ApiOrigin
-            DomainName: !Sub '${ContactApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}'
+            DomainName: !Select [2, !Split ['/', !GetAtt ContactFunctionUrl.FunctionUrl]]
             CustomOriginConfig:
               OriginProtocolPolicy: https-only
               OriginSSLProtocols:

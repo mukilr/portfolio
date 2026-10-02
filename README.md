@@ -26,12 +26,12 @@ The server verifies each single-use Google token before returning the email addr
 
 ## Deploy to AWS from GitHub Actions
 
-Every push to `main` runs `.github/workflows/deploy.yml`. The workflow builds the site, deploys the reCAPTCHA endpoint with AWS SAM, uploads the site to a private S3 bucket, and serves both through CloudFront over HTTPS.
+Every push to `main` runs `.github/workflows/deploy.yml`. The workflow builds the site, deploys the reCAPTCHA endpoint with AWS SAM and a Lambda Function URL, uploads the site to a private S3 bucket, and serves both through CloudFront over HTTPS.
 
 Complete this one-time setup:
 
 1. In AWS IAM, add GitHub as an OpenID Connect provider with URL `https://token.actions.githubusercontent.com` and audience `sts.amazonaws.com`.
-2. Create an IAM role that trusts the `mukilr/portfolio` repository on the `main` branch and grants the deployment permissions needed for CloudFormation/SAM, S3, CloudFront, API Gateway, Lambda, IAM role creation, and CloudWatch Logs.
+2. Create an IAM role that trusts the `mukilr/portfolio` repository's `prod` environment and grants the deployment permissions needed for CloudFormation/SAM, S3, CloudFront, Lambda, IAM role creation, and CloudWatch Logs.
 3. In the GitHub repository, open **Settings → Environments**, create an environment named `prod`, and add these secrets:
    - `AWS_DEPLOY_ROLE_ARN` — ARN of the IAM role from step 2.
    - `RECAPTCHA_SITE_KEY` — Google reCAPTCHA v2 checkbox site key.
@@ -41,7 +41,7 @@ Complete this one-time setup:
    - `AWS_REGION` — for example, `us-east-1`.
    - `ALLOWED_HOSTNAME` — the exact hostname registered in reCAPTCHA, without `https://`.
 
-The first workflow run creates the S3 bucket, CloudFront distribution, API Gateway endpoint, and Lambda function. Its **Summary** page contains the generated CloudFront URL. Add that hostname to the Google reCAPTCHA key and set `ALLOWED_HOSTNAME` to the same value, then rerun the workflow.
+The first workflow run creates the S3 bucket, CloudFront distribution, Lambda endpoint, and Lambda function. Its **Summary** page contains the generated CloudFront URL. Add that hostname to the Google reCAPTCHA key and set `ALLOWED_HOSTNAME` to the same value, then rerun the workflow.
 
 For a custom domain, point the domain at CloudFront, attach an ACM certificate issued in `us-east-1`, register the custom hostname in reCAPTCHA, and update `ALLOWED_HOSTNAME`.
 
