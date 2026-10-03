@@ -1,5 +1,7 @@
 const themeDefaults = { primary: '#48ff8b', secondary: '#020604', font: '#a4ffc2' };
 const themeStorageKey = 'portfolio-colors';
+const themeDialog = document.querySelector('#theme-dialog');
+document.querySelector('#theme-close').addEventListener('click', () => themeDialog.close());
 const themeInputs = Object.fromEntries(Object.keys(themeDefaults).map((key) => [key, document.querySelector(`#theme-${key}`)]));
 let theme = { ...themeDefaults };
 try {
@@ -261,6 +263,7 @@ const executeCommand = (command) => {
     window.location.href = url;
     return;
   }
+  if (command === 'customize') themeDialog.showModal();
   if (command === 'email') openRobotCheck();
 };
 

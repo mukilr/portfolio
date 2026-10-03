@@ -18,8 +18,8 @@
   <script>document.documentElement.classList.add('js')</script>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23020604'/%3E%3Cpath d='M14 18h36v28H14z' fill='none' stroke='%2348ff8b' stroke-width='3'/%3E%3Cpath d='m21 27 7 5-7 5M32 38h11' fill='none' stroke='%2348ff8b' stroke-width='3'/%3E%3C/svg%3E">
   <title>Mukil Rajeev | Terminal Portfolio</title>
-  <link rel="stylesheet" href="./styles.css?v=terminal-6">
-  <script src="./script.js?v=terminal-6" defer></script>
+  <link rel="stylesheet" href="./styles.css?v=terminal-7">
+  <script src="./script.js?v=terminal-7" defer></script>
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -60,17 +60,6 @@
       <a href="#education">education</a>
       <a href="resume.html">resume</a>
     </nav>
-
-    <details class="theme-picker">
-      <summary>Customize colors</summary>
-      <div class="theme-controls">
-        <label>Primary <small>Accents &amp; headings</small><input type="color" id="theme-primary" value="#48ff8b"></label>
-        <label>Secondary <small>Background &amp; panels</small><input type="color" id="theme-secondary" value="#020604"></label>
-        <label>Font <small>Body text</small><input type="color" id="theme-font" value="#a4ffc2"></label>
-        <button type="button" id="theme-reset">Reset colors</button>
-      </div>
-      <p class="theme-note" id="theme-status" role="status">Changes preview instantly and are saved in this browser.</p>
-    </details>
 
     <div class="terminal-body">
       <section class="intro terminal-sequence" aria-labelledby="name">
@@ -161,12 +150,30 @@
             <button type="button" role="option" data-command="resume"><kbd>resume</kbd><span>open full resume</span></button>
             <button type="button" role="option" data-command="replay"><kbd>replay</kbd><span>refresh animations</span></button>
             <button type="button" role="option" data-command="email"><kbd>email</kbd><span>verify and reveal</span></button>
+            <button type="button" role="option" data-command="customize" aria-haspopup="dialog" aria-controls="theme-dialog"><kbd>customize</kbd><span>change site colors</span></button>
           </div>
           <p class="command-status" aria-live="polite">Choose an option or type its command.</p>
         </div>
       </section>
     </div>
   </main>
+
+  <dialog class="robot-dialog theme-dialog" id="theme-dialog" aria-labelledby="theme-title">
+    <div class="theme-dialog-body">
+      <p class="dialog-kicker">APPEARANCE</p>
+      <h2 id="theme-title">Customize colors</h2>
+      <div class="theme-controls">
+        <label>Primary <small>Accents &amp; headings</small><input type="color" id="theme-primary" value="#48ff8b"></label>
+        <label>Secondary <small>Background &amp; panels</small><input type="color" id="theme-secondary" value="#020604"></label>
+        <label>Font <small>Body text</small><input type="color" id="theme-font" value="#a4ffc2"></label>
+      </div>
+      <p class="theme-note" id="theme-status" role="status">Changes preview instantly and are saved in this browser.</p>
+      <div class="dialog-actions">
+        <button type="button" id="theme-reset">Reset colors</button>
+        <button type="button" id="theme-close">Done</button>
+      </div>
+    </div>
+  </dialog>
 
   <dialog class="robot-dialog" id="robot-dialog" aria-labelledby="robot-title">
     <form class="robot-form" id="robot-form" method="dialog">
