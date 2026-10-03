@@ -18,8 +18,8 @@
   <script>document.documentElement.classList.add('js')</script>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23020604'/%3E%3Cpath d='M14 18h36v28H14z' fill='none' stroke='%2348ff8b' stroke-width='3'/%3E%3Cpath d='m21 27 7 5-7 5M32 38h11' fill='none' stroke='%2348ff8b' stroke-width='3'/%3E%3C/svg%3E">
   <title>Mukil Rajeev | Terminal Portfolio</title>
-  <link rel="stylesheet" href="./styles.css?v=terminal-5">
-  <script src="./script.js?v=terminal-5" defer></script>
+  <link rel="stylesheet" href="./styles.css?v=terminal-6">
+  <script src="./script.js?v=terminal-6" defer></script>
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -60,6 +60,17 @@
       <a href="#education">education</a>
       <a href="resume.html">resume</a>
     </nav>
+
+    <details class="theme-picker">
+      <summary>Customize colors</summary>
+      <div class="theme-controls">
+        <label>Primary <small>Accents &amp; headings</small><input type="color" id="theme-primary" value="#48ff8b"></label>
+        <label>Secondary <small>Background &amp; panels</small><input type="color" id="theme-secondary" value="#020604"></label>
+        <label>Font <small>Body text</small><input type="color" id="theme-font" value="#a4ffc2"></label>
+        <button type="button" id="theme-reset">Reset colors</button>
+      </div>
+      <p class="theme-note" id="theme-status" role="status">Changes preview instantly and are saved in this browser.</p>
+    </details>
 
     <div class="terminal-body">
       <section class="intro terminal-sequence" aria-labelledby="name">

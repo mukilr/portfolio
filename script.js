@@ -1,3 +1,55 @@
+const themeDefaults = { primary: '#48ff8b', secondary: '#020604', font: '#a4ffc2' };
+const themeStorageKey = 'portfolio-colors';
+const themeInputs = Object.fromEntries(Object.keys(themeDefaults).map((key) => [key, document.querySelector(`#theme-${key}`)]));
+let theme = { ...themeDefaults };
+try {
+  const saved = JSON.parse(localStorage.getItem(themeStorageKey));
+  for (const key of Object.keys(themeDefaults)) {
+    if (/^#[0-9a-f]{6}$/i.test(saved?.[key])) theme[key] = saved[key];
+  }
+} catch { /* Color customization also works when browser storage is unavailable. */ }
+
+const applyTheme = () => {
+  const root = document.documentElement;
+  const custom = Object.keys(themeDefaults).some((key) => theme[key] !== themeDefaults[key]);
+  const properties = {
+    '--green': theme.primary,
+    '--black': theme.secondary,
+    '--green-soft': theme.font,
+    '--panel': `color-mix(in srgb, ${theme.secondary} 98%, ${theme.primary})`,
+    '--panel-2': `color-mix(in srgb, ${theme.secondary} 96%, ${theme.primary})`,
+    '--green-muted': `color-mix(in srgb, ${theme.font} 72%, ${theme.secondary})`,
+    '--dim': `color-mix(in srgb, ${theme.font} 48%, ${theme.secondary})`,
+  };
+  for (const [property, value] of Object.entries(properties)) {
+    if (custom) root.style.setProperty(property, value);
+    else root.style.removeProperty(property);
+  }
+  for (const [key, input] of Object.entries(themeInputs)) input.value = theme[key];
+  document.querySelector('meta[name="theme-color"]').content = theme.secondary;
+};
+const saveTheme = () => {
+  try {
+    localStorage.setItem(themeStorageKey, JSON.stringify(theme));
+    document.querySelector('#theme-status').textContent = 'Colors saved in this browser.';
+  } catch {
+    document.querySelector('#theme-status').textContent = 'Colors updated. Browser storage is unavailable; changes last for this visit.';
+  }
+};
+for (const [key, input] of Object.entries(themeInputs)) {
+  input.addEventListener('input', () => {
+    theme[key] = input.value;
+    applyTheme();
+  });
+  input.addEventListener('change', saveTheme);
+}
+document.querySelector('#theme-reset').addEventListener('click', () => {
+  theme = { ...themeDefaults };
+  applyTheme();
+  saveTheme();
+});
+applyTheme();
+
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const sequences = [...document.querySelectorAll('.terminal-sequence')];
 
