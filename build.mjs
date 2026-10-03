@@ -4,7 +4,7 @@ await rm("dist", { recursive: true, force: true });
 await mkdir("dist/assets", { recursive: true });
 await mkdir("dist/server", { recursive: true });
 
-for (const file of ["index.html", "resume.html", "styles.css", "resume.css", "script.js"]) {
+for (const file of ["index.html", "resume.html", "styles.css", "resume.css", "script.js", "robots.txt", "sitemap.xml"]) {
   await cp(file, `dist/${file}`);
 }
 
