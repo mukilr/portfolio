@@ -14,7 +14,7 @@ body {
   margin: 0;
   color: var(--ink);
   background: var(--canvas);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -73,8 +73,11 @@ body {
 }
 
 .resume-heading {
-  margin: 0 0 7pt;
-  text-align: center;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0 0 12pt;
 }
 
 .resume-heading h1 {
@@ -96,7 +99,7 @@ body {
 .resume-heading address {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-end;
   gap: 0 5pt;
   margin: 0;
   color: var(--muted);
@@ -115,18 +118,58 @@ body {
 }
 
 .resume-page h2 {
-  margin: 8pt 0 3pt;
-  font-size: 10.5pt;
-  font-weight: 700;
+  margin: 11pt 0 5pt;
+  color: #4285e8;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15pt;
+  font-weight: 400;
   line-height: 1;
   text-transform: uppercase;
 }
 
 .resume-page section > p {
-  margin: 0 0 4pt;
+  margin: 0 0 9pt;
   font-size: 10pt;
-  line-height: 1.18;
+  line-height: 1.35;
 }
+
+.profile-section { margin-bottom: 10pt; }
+
+.resume-job { margin: 0 0 10pt; }
+
+.resume-job h3,
+.education-item h3 {
+  margin: 0 0 2pt;
+  font-size: 12pt;
+  font-weight: 400;
+}
+
+.resume-job h3 em,
+.education-item h3 em {
+  font-size: 10.5pt;
+  font-weight: 400;
+}
+
+.resume-job time,
+.education-item time {
+  display: block;
+  margin-bottom: 3pt;
+  font: 700 8.5pt/1 Aptos, Arial, sans-serif;
+  text-transform: uppercase;
+}
+
+.resume-page ul {
+  margin: 3pt 0 0 18pt;
+  padding: 0;
+  font-size: 9.6pt;
+  line-height: 1.22;
+}
+
+.resume-page li { margin: 0 0 2pt; }
+
+.skills-list { list-style: none; margin-left: 0 !important; }
+
+.education-item { margin: 0 0 12pt; }
 
 .resume-entry {
   display: grid;
@@ -184,6 +227,7 @@ body {
     box-shadow: none;
   }
   .resume-heading h1 { font-size: 24pt; }
+  .resume-heading { align-items: flex-start; flex-direction: column; }
   .resume-entry {
     grid-template-columns: 1fr;
     gap: 1pt;
@@ -198,7 +242,7 @@ body {
     text-transform: uppercase;
   }
   .resume-heading address span { display: none; }
-  .resume-heading address { gap: 2pt 8pt; }
+  .resume-heading address { justify-content: flex-start; gap: 2pt 8pt; }
   .resume-heading address a { width: 100%; }
 }
 
@@ -208,7 +252,7 @@ body {
   .resume-toolbar { display: none; }
   .resume-page {
     width: 8.5in;
-    height: 11in;
+    height: auto;
     min-height: 0;
     margin: 0;
     padding: .55in .65in .5in;
