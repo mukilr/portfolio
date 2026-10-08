@@ -241,7 +241,7 @@ body {
     letter-spacing: .04em;
     text-transform: uppercase;
   }
-  .resume-heading address span { display: none; }
+  .resume-heading address span[aria-hidden="true"] { display: none; }
   .resume-heading address { justify-content: flex-start; gap: 2pt 8pt; }
   .resume-heading address a { width: 100%; }
 }
@@ -258,6 +258,8 @@ body {
     padding: .55in .65in .5in;
     box-shadow: none;
   }
-  .resume-page section,
+  .resume-job,
+  .education-item,
   .resume-entry { break-inside: avoid; }
+  .resume-page h2 { break-after: avoid; }
 }
