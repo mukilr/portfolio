@@ -135,7 +135,6 @@ const optionButtons = [...document.querySelectorAll('.quick-options [data-comman
 const commandStatus = document.querySelector('.command-status');
 const robotDialog = document.querySelector('#robot-dialog');
 const robotForm = document.querySelector('#robot-form');
-const recaptchaContainer = document.querySelector('#recaptcha-widget');
 const verifyHumanButton = document.querySelector('#verify-human');
 const robotMessage = document.querySelector('#robot-message');
 const emailReveal = document.querySelector('#email-reveal');
@@ -144,7 +143,7 @@ const copyEmailButton = document.querySelector('#copy-email');
 const openEmailLink = document.querySelector('#open-email');
 const copyStatus = document.querySelector('#copy-status');
 let activeOption = 0;
-let recaptchaWidgetId = null;
+let recaptchaSiteKey = '';
 let recaptchaLoader = null;
 let unlockedEmail = '';
 
@@ -182,22 +181,17 @@ const filterOptions = () => {
     : `command not found: ${query}`;
 };
 
-const loadRecaptcha = () => {
-  if (window.grecaptcha?.render) return Promise.resolve();
+const loadRecaptcha = (siteKey) => {
   if (recaptchaLoader) return recaptchaLoader;
   recaptchaLoader = new Promise((resolve, reject) => {
-    const callbackName = 'portfolioRecaptchaLoaded';
-    window[callbackName] = () => {
-      delete window[callbackName];
-      resolve();
-    };
     const script = document.createElement('script');
-    script.src = `https://www.google.com/recaptcha/api.js?onload=${callbackName}&render=explicit`;
+    script.src = `https://www.google.com/recaptcha/api.js?render=${encodeURIComponent(siteKey)}`;
     script.async = true;
-    script.defer = true;
+    script.onload = () => window.grecaptcha.ready(resolve);
     script.onerror = () => {
-      delete window[callbackName];
-      reject(new Error('Google reCAPTCHA could not be loaded.'));
+      script.remove();
+      recaptchaLoader = null;
+      reject(new Error('Google verification could not be loaded. Please try again.'));
     };
     document.head.append(script);
   });
@@ -216,34 +210,13 @@ const openRobotCheck = async () => {
   robotDialog.showModal();
 
   try {
-    const [configResponse] = await Promise.all([
-      fetch('/api/contact/config', { cache: 'no-store' }),
-      loadRecaptcha(),
-    ]);
+    const configResponse = await fetch('/api/contact/config', { cache: 'no-store' });
     if (!configResponse.ok) throw new Error('Secure email verification is not configured.');
     const { siteKey } = await configResponse.json();
     if (!siteKey) throw new Error('Google reCAPTCHA site key is missing.');
-
-    if (recaptchaWidgetId === null) {
-      recaptchaWidgetId = window.grecaptcha.render(recaptchaContainer, {
-        sitekey: siteKey,
-        theme: 'dark',
-        callback: () => {
-          verifyHumanButton.disabled = false;
-          robotMessage.textContent = '';
-        },
-        'expired-callback': () => {
-          verifyHumanButton.disabled = true;
-          robotMessage.textContent = 'Verification expired. Please try again.';
-        },
-        'error-callback': () => {
-          verifyHumanButton.disabled = true;
-          robotMessage.textContent = 'Google verification failed to load.';
-        },
-      });
-    } else {
-      window.grecaptcha.reset(recaptchaWidgetId);
-    }
+    await loadRecaptcha(siteKey);
+    recaptchaSiteKey = siteKey;
+    verifyHumanButton.disabled = false;
     robotMessage.textContent = '';
   } catch (error) {
     robotMessage.textContent = error.message;
@@ -293,15 +266,12 @@ document.querySelectorAll('[data-command]').forEach((button) => {
 
 robotForm.addEventListener('submit', async (event) => {
   event.preventDefault();
-  const token = recaptchaWidgetId === null ? '' : window.grecaptcha.getResponse(recaptchaWidgetId);
-  if (!token) {
-    robotMessage.textContent = 'Complete Google verification first.';
-    return;
-  }
+  if (!recaptchaSiteKey || verifyHumanButton.disabled) return;
   verifyHumanButton.disabled = true;
   robotMessage.textContent = 'Verifying securely...';
 
   try {
+    const token = await window.grecaptcha.execute(recaptchaSiteKey, { action: 'contact_unlock' });
     const response = await fetch('/api/contact/unlock', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -318,7 +288,7 @@ robotForm.addEventListener('submit', async (event) => {
     window.setTimeout(() => copyEmailButton.focus(), 0);
   } catch (error) {
     robotMessage.textContent = error.message;
-    window.grecaptcha.reset(recaptchaWidgetId);
+    verifyHumanButton.disabled = false;
   }
 });
 
@@ -346,6 +316,6 @@ document.querySelectorAll('[data-close-dialog]').forEach((button) => {
 });
 robotDialog.addEventListener('close', () => {
   unlockedEmail = '';
-  if (recaptchaWidgetId !== null) window.grecaptcha.reset(recaptchaWidgetId);
+
 });
 setActiveOption(0);

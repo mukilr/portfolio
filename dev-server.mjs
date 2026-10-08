@@ -5,11 +5,9 @@ import worker from './server/index.js';
 
 const port = Number(process.env.PORT || 4174);
 const root = resolve('.');
-const testSiteKey = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
-const testSecretKey = '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe';
 const env = {
-  RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY || testSiteKey,
-  RECAPTCHA_SECRET_KEY: process.env.RECAPTCHA_SECRET_KEY || testSecretKey,
+  RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY,
+  RECAPTCHA_SECRET_KEY: process.env.RECAPTCHA_SECRET_KEY,
   CONTACT_EMAIL: process.env.CONTACT_EMAIL,
   ALLOWED_ORIGIN: process.env.ALLOWED_ORIGIN || `http://127.0.0.1:${port}`,
   ALLOWED_HOSTNAME: process.env.ALLOWED_HOSTNAME,

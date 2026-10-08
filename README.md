@@ -4,17 +4,17 @@ A responsive personal portfolio for Mukil Rajeev, Senior Member of Technical Sta
 
 ## Run locally
 
-The secure email reveal uses Google reCAPTCHA and a server-side verification endpoint. The local server uses Google's official reCAPTCHA test keys; provide the protected email as an environment value.
+The secure email reveal uses Google reCAPTCHA and a server-side verification endpoint. Local verification requires your own v3 key pair registered for localhost; provide both keys and the protected email as environment values.
 
 ```sh
-CONTACT_EMAIL=you@example.com npm run dev
+RECAPTCHA_SITE_KEY=your-v3-site-key RECAPTCHA_SECRET_KEY=your-v3-secret-key CONTACT_EMAIL=you@example.com npm run dev
 ```
 
 Then visit `http://127.0.0.1:4174`.
 
 ## Production configuration
 
-Create a Google reCAPTCHA v2 checkbox key for the deployed domain, then configure these runtime values without committing them to Git:
+Create a Google reCAPTCHA v3 key for the deployed domain, then configure these runtime values without committing them to Git:
 
 - `RECAPTCHA_SITE_KEY` — the public Google site key.
 - `RECAPTCHA_SECRET_KEY` — the private Google secret key.
@@ -22,7 +22,7 @@ Create a Google reCAPTCHA v2 checkbox key for the deployed domain, then configur
 - `ALLOWED_ORIGIN` — the complete deployed origin, such as `https://example.com`.
 - `ALLOWED_HOSTNAME` — the deployed hostname, such as `example.com`.
 
-The server verifies each single-use Google token before returning the email address. The private key and protected address are never included in the browser bundle.
+The server verifies each single-use Google token, the contact_unlock action, the allowed hostname, and a minimum risk score of 0.5 before returning the email address. The private key and protected address are never included in the browser bundle.
 
 ## Deploy to AWS from GitHub Actions
 
@@ -34,7 +34,7 @@ Complete this one-time setup:
 2. Create an IAM role that trusts the `mukilr/portfolio` repository's `prod` environment and grants the deployment permissions needed for CloudFormation/SAM, S3, CloudFront, Lambda, IAM role creation, and CloudWatch Logs.
 3. In the GitHub repository, open **Settings → Environments**, create an environment named `prod`, and add these secrets:
    - `AWS_DEPLOY_ROLE_ARN` — ARN of the IAM role from step 2.
-   - `RECAPTCHA_SITE_KEY` — Google reCAPTCHA v2 checkbox site key.
+   - `RECAPTCHA_SITE_KEY` — Google reCAPTCHA v3 site key.
    - `RECAPTCHA_SECRET_KEY` — matching private key.
    - `CONTACT_EMAIL` — email revealed after successful verification.
 4. Add these environment variables:

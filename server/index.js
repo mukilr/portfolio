@@ -29,7 +29,8 @@ const verifyRecaptcha = async (token, request, env) => {
   });
   if (!response.ok) return false;
   const result = await response.json();
-  if (!result.success) return false;
+  if (!result.success || result.action !== 'contact_unlock' ||
+      !Number.isFinite(result.score) || result.score < 0.5) return false;
 
   if (env.ALLOWED_HOSTNAME) {
     const allowedHostnames = env.ALLOWED_HOSTNAME.split(',').map((hostname) => hostname.trim());
